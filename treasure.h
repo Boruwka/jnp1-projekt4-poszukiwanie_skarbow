@@ -1,6 +1,5 @@
 template <typename ValueType, bool IsTrapped>
-requires std::integral<ValueType> 
-// nie wiem na razie, jak zrobić te skróty  
+requires std::integral<ValueType>
 class Treasure()
 {
     public:
@@ -25,6 +24,45 @@ class Treasure()
     private: 
         ValueType value;
 };
+
+template<ValueType>
+requires std::integral<ValueType> 
+class SafeTreasure: public Treasure<ValueType, false>
+{
+    public:
+        explicit constexpr SafeTreasure(ValueType value):Treasure<ValueType, false>(value) {
+            this->value = value;
+        }
+    private:
+        ValueType value;
+        bool isTrapped = false;
+};
+
+template<ValueType>
+requires std::integral<ValueType> 
+class TrappedTreasure: public Treasure<ValueType, true>
+{
+    public:
+        explicit constexpr SafeTreasure(ValueType value):Treasure<ValueType, true>(value) {
+            this->value = value;
+        }
+    private:
+        ValueType value;
+        bool isTrapped = true;
+};
+
+/* 
+template<integral ValueType>
+class SafeTreasure : public Treasure<ValueType, false>{
+public:
+    explicit constexpr SafeTreasure(ValueType value):Treasure<ValueType, false>(value) {
+        this->value = value;
+    }
+private:
+    ValueType value;
+    bool isTrapped = false;
+};
+*/
 
 /* Skarby – treasure.h
 

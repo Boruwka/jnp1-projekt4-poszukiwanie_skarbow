@@ -1,3 +1,57 @@
+template <typename ValueType, bool IsArmed>
+requires std::integral<ValueType>
+class Adventurer()
+{
+    public:
+        bool std::conditional<IsArmed, true, false> isArmed;
+        // nie wiem, jak zrobić, żeby jakieś funkcje były tylko dla uzbrojonego lub nie
+        Adventurer()
+        {
+           strength = 0; 
+        }
+        Adventurer(int strength):strength(strength)
+        {
+    
+        }
+        int getStrength()
+        {
+            return strength;
+        }
+
+    private:
+        int strength; 
+} 
+
+
+// przykłady z internetu: 
+
+/* 
+template <bool isList>
+struct A
+{
+    typename std::conditional<isList, 
+                              std::list<int>,
+                              std::vector<int>>::type container;
+};
+*/
+
+
+/* template <bool isList>
+struct A;
+
+template<>
+struct A<true>
+{
+    std::list<int> container;
+};
+
+template<>
+struct A<false>
+{
+    std::vector<int> container;
+}; */
+
+
 /* Poszukiwacze przygód
 Szablon klasy Adventurer<ValueType, IsArmed> powinien zależeć od dwóch parametrów:
 ValueType – będącego typem wartości zbieranego skarbu, oraz IsArmed – będącego
@@ -22,6 +76,7 @@ pay() – powoduje oddanie zebranych skarbów, czyli zwraca ich wartość i zeru
 stan posiadania poszukiwacza przygód.
 Ponadto powinno być możliwe użycie skrótu Explorer<ValueType> oznaczającego
 nieuzbrojonego poszukiwacza przygód o typie wartości ValueType .
+
 Weterani
 Szablon klasy Veteran<ValueType, CompletedExpeditions> powinien zależeć od dwóch
 parametrów: ValueType – będącego typem wartości zbieranego skarbu, oraz
