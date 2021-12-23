@@ -1,47 +1,49 @@
 #include "treasure.h"
 #include "member.h"
 
+/* SKOPIOWANE OD KOGOŚ!!! */
+template<typename T>
+struct IsTreasure : std::false_type {
+};
+
+template<std::integral ValueType, bool IsTrapped>
+struct IsTreasure<Treasure<ValueType, IsTrapped>> : std::true_type {
+};
+template<typename T>
+concept TreasureType = IsTreasure<T>::value;
 
 template<typename T>
-concept hasStrengthType = T::strengh_t;
+concept MemberType = requires(T t) {
+    typename T::strength_t;
+    { []() constexpr { return T::isArmed; }() };
+    { t.isArmed } -> std::convertible_to<bool>;
+    { t.pay() } -> std::integral;
+    t.loot(std::declval<Treasure<decltype(t.pay()), true>>());
+    t.loot(std::declval<Treasure<decltype(t.pay()), false>>());
+};
 
 template<typename T>
-concept hasIsArmed = requires (T t) {t.isArmed; };
+concept EncounterSide = TreasureType<T> || MemberType<T>;
 
-template<typename T>
-concept hasFuncPay = requires(T t) {
-      { t.pay() } -> integral;
-  };
 
-template<typename T, bool B, Treasure<integral auto, B> u>
-concept hasFuncLoot = requires(T t) {
-    { t.loot(u) };    
+template<EncounterSide sideA, EncounterSide sideB>
+class Encounter {
+    public: 
+        sideA &a;
+        sideB &b;
+        
 };
 
 
-
-template<typename T, bool B, Treasure<integral auto, B> u >
-concept Member = hasStrengthType<T> && hasIsArmed<T> && hasFuncPay<T> && hasFuncLoot<T, B, u>;
-
-template<typename T, bool B, Treasure<integral auto, B> u, typename ValueType>
-concept EncounterSide = Member<T, B, u> || std::same_as<T, Treasure<ValueType, B> >;
-
-
-template Encounter<EncounterSide& sideA, EncounterSide& sideB>
-class Encounter
-{
-    public:
-        sideA a;
-        sideB b;
-};
+/* KONIEC SKOPIOWANEGO */
  
 void run(Encounter encounter)
 {
-    if (std::isSame(Treasure<>, encounter.a)
+    if (std::is_same(Treasure<>, encounter.a)
     {
         encounter.b.loot();
     }    
-    else if (std::isSame(Treasure<>, encounter.b)
+    else if (std::is_same(Treasure<>, encounter.b)
     {
         encounter.a.loot();
     }
